@@ -135,7 +135,7 @@ export default function TournamentDraw() {
             alt="شعار الدورة"
             className="w-14 h-14 rounded-full border-2 border-white shadow-md"
           />
-          <h1 className="text-2xl md:text-3xl font-extrabold drop-shadow-lg">
+          <h1 className="text-2xl md:text-3xl font-extrabold drop-shadow-lg text-green-600">
             قرعة دورة أبطال أمة الأقصى
           </h1>
         </header>
@@ -150,7 +150,7 @@ export default function TournamentDraw() {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 50, opacity: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-center text-xl md:text-2xl font-bold text-yellow-300 drop-shadow-lg"
+                className="text-center text-xl md:text-2xl font-bold text-yellow-400 drop-shadow-lg"
               >
                 {currentTeam}
               </motion.div>
@@ -159,11 +159,11 @@ export default function TournamentDraw() {
         </div>
 
         {/* مجموعات */}
-        <main className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-2 p-2">
-          {groups.map((g, idx) => (
-            <GroupCard key={idx} title={groupLabels[idx]} teams={g} />
-          ))}
-        </main>
+<main className="grid grid-cols-2 md:grid-cols-4 gap-2 p-2 flex-1 overflow-y-auto max-h-[400px]">
+  {groups.map((g, idx) => (
+    <GroupCard key={idx} title={groupLabels[idx]} teams={g} />
+  ))}
+</main>
 
         {/* أزرار التحكم */}
         <div className="flex gap-3 justify-center items-center py-2">
