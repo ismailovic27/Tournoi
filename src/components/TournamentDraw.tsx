@@ -6,12 +6,19 @@ import { Shuffle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// ====== الفرق ======
-const defaultTeams = [
-  "الفريق 1","الفريق 2","الفريق 3","الفريق 4","الفريق 5","الفريق 6",
-  "الفريق 7","الفريق 8","الفريق 9","الفريق 10","الفريق 11","الفريق 12",
-  "الفريق 13","الفريق 14","الفريق 15","الفريق 16","الفريق 17","الفريق 18",
-  "الفريق 19","الفريق 20","الفريق 21","الفريق 22","الفريق 23","الفريق 24",
+const pot1 = [
+  "أصدقاء أمين عبدلي", "آفاق جنين", "قلعة الشيخ بوعمامة", "نجم صفيصيفة",
+  "شبيبة بلحنجير", "شباب أولقاق", "شبيبة البيِّض", "شباب بني ونيف",
+];
+
+const pot2 = [
+  "برج الحمام", "الكناري", "حمزة عرابي", "100 مسكن",
+  "شبيبة القبائل", "شبيبة بومريفق", "عز الدين لغراري", "الأمل",
+];
+
+const pot3 = [
+  "الوفاق", "الاتحاد", "حومة 19 مارس", "شباب المدينة",
+  "نجم الصحراء", "حي 17 أكتوبر", "الجيش الأبيض", "حي أول نوفمبر",
 ];
 
 const groupLabels = [
@@ -19,7 +26,6 @@ const groupLabels = [
   "المجموعة E","المجموعة F","المجموعة G","المجموعة H",
 ];
 
-// ====== خوارزمية خلط ======
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -29,133 +35,161 @@ function shuffleArray<T>(arr: T[]): T[] {
   return a;
 }
 
-// ====== شارة فريق ======
-function TeamPill({ name, highlight = false }: { name: string; highlight?: boolean }) {
+function TeamPill({ name }: { name: string }) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      className={`px-3 py-1 rounded-2xl text-sm font-semibold whitespace-nowrap border shadow-sm ${
-        highlight ? "bg-green-50 border-green-300" : "bg-white border-gray-200"
-      }`}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+      className="px-2 py-1 rounded-md text-xs md:text-sm font-semibold text-center bg-white text-black shadow"
     >
       {name}
     </motion.div>
   );
 }
 
-// ====== بطاقة مجموعة ======
 function GroupCard({ title, teams }: { title: string; teams: string[] }) {
   return (
-    <Card className="rounded-2xl shadow-md bg-white/80 backdrop-blur">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold text-gray-800">{title}</CardTitle>
+    <Card className="rounded-lg shadow-lg bg-white/50 backdrop-blur flex flex-col h-[180px]">
+      <CardHeader className="p-1 border-b">
+        <CardTitle className="text-xs md:text-sm font-bold text-black-900 text-center">
+          {title}
+        </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-col gap-2">
-          {teams.map((t, i) => (
-            <AnimatePresence key={t + i}>
-              {t && <TeamPill name={t} highlight={i < 2 && teams.length >= 2} />}
-            </AnimatePresence>
-          ))}
-          {teams.length === 0 && (
-            <div className="text-sm text-gray-400">— في انتظار السحب —</div>
-          )}
-        </div>
+      <CardContent className="flex flex-col gap-1 items-center justify-center px-1 py-2 overflow-hidden">
+        {teams.length === 0 && (
+          <div className="text-xs text-gray-400">— في انتظار —</div>
+        )}
+        {teams.map((t, i) => (
+          <TeamPill key={t + i} name={t} />
+        ))}
       </CardContent>
     </Card>
   );
 }
 
-// ====== المكوّن الرئيسي ======
 export default function TournamentDraw() {
   const [groups, setGroups] = useState<string[][]>(Array.from({ length: 8 }, () => []));
-  const [remaining, setRemaining] = useState<string[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0); // لمتابعة الدور
+  const [pots, setPots] = useState<string[][]>([]);
+  const [currentTeam, setCurrentTeam] = useState<string | null>(null);
+  const [step, setStep] = useState(0); // 0 = pot1, 1 = pot2, 2 = pot3
+  const [index, setIndex] = useState(0);
 
   function startDraw() {
-    setRemaining(shuffleArray(defaultTeams));
     setGroups(Array.from({ length: 8 }, () => []));
-    setCurrentIndex(0);
+    setPots([shuffleArray(pot1), shuffleArray(pot2), shuffleArray(pot3)]);
+    setCurrentTeam(null);
+    setStep(0);
+    setIndex(0);
   }
 
   function drawOneTeam() {
-    if (remaining.length === 0) return;
+    if (step >= 3) return;
 
-    const nextTeam = remaining[0];
-    const rest = remaining.slice(1);
+    const currentPot = pots[step];
+    if (!currentPot || index >= currentPot.length) return;
 
-    const groupIndex = currentIndex % 8;
-    const newGroups = [...groups];
-    newGroups[groupIndex] = [...newGroups[groupIndex], nextTeam];
+    const nextTeam = currentPot[index];
+    setCurrentTeam(nextTeam);
 
-    setGroups(newGroups);
-    setRemaining(rest);
-    setCurrentIndex(currentIndex + 1);
+    setTimeout(() => {
+      const newGroups = [...groups];
+      newGroups[index] = [...newGroups[index], nextTeam];
+
+      setGroups(newGroups);
+      setIndex(index + 1);
+      setCurrentTeam(null);
+
+      if (index + 1 >= 8) {
+        setStep(step + 1);
+        setIndex(0);
+      }
+    }, 1500);
   }
 
   function resetAll() {
     setGroups(Array.from({ length: 8 }, () => []));
-    setRemaining([]);
-    setCurrentIndex(0);
+    setPots([]);
+    setCurrentTeam(null);
+    setStep(0);
+    setIndex(0);
   }
 
   return (
-    <div
-      dir="rtl"
-      className="min-h-screen bg-cover bg-center text-gray-800 p-4 md:p-8 relative"
-      style={{ backgroundImage: "url('/1.jpg')" }}
-    >
-      <div className="absolute inset-0 bg-black/40" />
+    <div dir="rtl" className="h-screen w-screen relative overflow-hidden text-white flex flex-col">
+      {/* الخلفية */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/1.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-green-600/30 via-red-400/30 to-[#C2B280]/40" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-3">
-            <img
-              src="/3.jpg"
-              alt="شعار الدورة"
-              className="w-16 h-16 rounded-full shadow-md border bg-white"
-            />
-            <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold text-white drop-shadow">
-              دورة أبطال أمة الأقصى
-              </h1>
-              <p className="text-sm text-gray-200 mt-1 drop-shadow">
-                قرعة دور المجموعات
-              </p>
-            </div>
-          </div>
+      {/* المحتوى */}
+      <div className="relative z-10 flex flex-col h-full">
+        {/* الهيدر */}
+        <header className="text-center py-3 shrink-0 flex flex-col items-center gap-2">
+          <img
+            src="/3.jpg"
+            alt="شعار الدورة"
+            className="w-14 h-14 rounded-full border-2 border-white shadow-md"
+          />
+          <h1 className="text-2xl md:text-3xl font-extrabold drop-shadow-lg">
+            قرعة دورة أبطال أمة الأقصى
+          </h1>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {/* الفريق الحالي */}
+        <div className="flex justify-center items-center h-16">
+          <AnimatePresence>
+            {currentTeam && (
+              <motion.div
+                key={currentTeam}
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 50, opacity: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-center text-xl md:text-2xl font-bold text-yellow-300 drop-shadow-lg"
+              >
+                {currentTeam}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* مجموعات */}
+        <main className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-2 p-2">
           {groups.map((g, idx) => (
             <GroupCard key={idx} title={groupLabels[idx]} teams={g} />
           ))}
-        </div>
+        </main>
 
-        <div className="mt-6 flex gap-3 flex-wrap">
-          {remaining.length === 0 && currentIndex === 0 ? (
-            <Button onClick={startDraw} variant="secondary">
-              <Shuffle className="w-4 h-4 ml-2" />
-              بدء السحب
+        {/* أزرار التحكم */}
+        <div className="flex gap-3 justify-center items-center py-2">
+          {pots.length === 0 ? (
+            <Button
+              onClick={startDraw}
+              className="bg-yellow-400 text-black text-sm font-bold hover:bg-yellow-500"
+            >
+              <Shuffle className="w-4 h-4 ml-1" />
+              بدء القرعة
             </Button>
           ) : (
-            <Button onClick={drawOneTeam} variant="secondary" disabled={remaining.length === 0}>
-              <Shuffle className="w-4 h-4 ml-2" />
+            <Button
+              onClick={drawOneTeam}
+              disabled={step >= 3}
+              className="bg-green-500 text-sm hover:bg-green-600"
+            >
+              <Shuffle className="w-4 h-4 ml-1" />
               سحب فريق
             </Button>
           )}
-          <Button onClick={resetAll} variant="destructive">
-            <RotateCcw className="w-4 h-4 ml-2" />
+          <Button onClick={resetAll} className="bg-red-500 text-sm hover:bg-red-600">
+            <RotateCcw className="w-4 h-4 ml-1" />
             إعادة ضبط
           </Button>
         </div>
-
-        <footer className="mt-6 text-xs text-gray-200 drop-shadow">
-          صُممت هذه الصفحة لعرض القرعة مباشرة مع شعار الدورة وخلفية مخصصة.
-        </footer>
       </div>
     </div>
   );
