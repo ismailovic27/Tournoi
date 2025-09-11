@@ -8,18 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const pot1 = [
-  "أصدقاء أمين عبدلي", "آفاق جنين", "قلعة الشيخ بوعمامة", "نجم صفيصيفة",
-  "شبيبة بلحنجير", "شباب أولقاق", "شبيبة البيّض", "شباب بني ونيف",
+  "أصدقاء أمين عبدلي", " آفاق جنين بورزق", "قلعة الشيخ بوعمامة", "نجم صفيصيفة",
+  "شباب بلحنجير", "الشبيبة", "مولودية البيّض", "شبيبة بني ونيف",
 ];
 
 const pot2 = [
-  "برج الحمام", "الكناري", "حمزة عرابي", "100 مسكن",
-  "شبيبة القبائل", "شبيبة بومريفق", "عز الدين لغراري", "الأمل",
+  "برج الحمام", "الكناري", "فريق حمزة عرابي", "حي 100 مسكن",
+  "شبيبة القبائل", "شبيبة بومريفق", "فريق عز الدين قراري", "الأمل",
 ];
 
 const pot3 = [
   "الوفاق", "الاتحاد", "حومة 19 مارس", "شباب المدينة",
-  "نجم الصحراء", "حي 17 أكتوبر", "الجيش الأبيض", "حي أول نوفمبر",
+  "شبيبة عين الصفراء الجديدة", "حي 17 أكتوبر", "الجيش الأبيض", "حي أول نوفمبر",
 ];
 
 const groupLabels = [
@@ -53,7 +53,7 @@ function TeamPill({ name }: { name: string }) {
 
 function GroupCard({ title, teams }: { title: string; teams: string[] }) {
   return (
-    <Card className="rounded-lg shadow-lg bg-white/10 backdrop-blur-md flex flex-col h-auto min-h-[140px]">
+    <Card className="rounded-lg shadow-lg bg-white/10 backdrop-blur-md flex flex-col h-[180px]">
       <CardHeader className="p-2 border-b bg-blue-500/80 text-white rounded-t-lg">
         <CardTitle className="text-xs md:text-sm font-bold text-center">
           {title}
@@ -73,23 +73,23 @@ function GroupCard({ title, teams }: { title: string; teams: string[] }) {
 
 function PotCard({ title, teams, potNumber }: { title: string; teams: string[]; potNumber: number }) {
   const potColors = [
-    "bg-blue-500", // Pot 1 - Gold
-    "bg-blue-500",     // Pot 2 - Silver
-    "bg-blue-500"    // Pot 3 - Bronze
+    "bg-blue-500",
+    "bg-blue-500",
+    "bg-blue-500"
   ];
 
   return (
-    <Card className="rounded-lg shadow-lg bg-white/50 backdrop-blur-md flex flex-col h-auto max-h-[350px] ">
-      <CardHeader className={`p-2 border-b text-white rounded-t-lg ${potColors[potNumber - 1]}`}>
-        <CardTitle className="text-sm md:text-base font-bold text-center">
+    <Card className="rounded-lg shadow-lg bg-white/50 backdrop-blur-md flex flex-col h-auto">
+      <CardHeader className={`p-3 border-b text-white rounded-t-lg ${potColors[potNumber - 1]}`}>
+        <CardTitle className="text-base md:text-lg font-bold text-center">
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-1 items-stretch justify-start px-2 pt-2 pb-1 flex-1 overflow-y-auto">
+      <CardContent className="flex flex-col gap-2 items-stretch justify-start px-3 pt-3 pb-1 flex-1">
         {teams.map((team, i) => (
           <div
             key={team + i}
-            className="px-2 py-1 rounded-md text-xs font-semibold text-center bg-white text-black shadow border border-gray-300 min-w-0 w-full"
+            className="px-3 py-2 rounded-md text-sm font-semibold text-center bg-white text-black shadow border border-gray-300 min-w-0 w-full"
           >
             <div className="truncate">{team}</div>
           </div>
@@ -128,10 +128,10 @@ function ClassificationScreen({ onStartDraw }: { onStartDraw: () => void }) {
 
         {/* تصنيف الفرق */}
         <main className="flex justify-center items-center flex-1  pr-24 py-4 overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full max-w-6xl">
-            <PotCard title="الوعاء الأول" teams={pot1} potNumber={1} />
-            <PotCard title="الوعاء الثاني" teams={pot2} potNumber={2} />
-            <PotCard title="الوعاء الثالث" teams={pot3} potNumber={3} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-7xl">
+            <PotCard title="الجزائر المنتصرة" teams={pot1} potNumber={1} />
+            <PotCard title="عين الصفراء أمانة و وفاء" teams={pot2} potNumber={2} />
+            <PotCard title=" غزة أرض العزة" teams={pot3} potNumber={3} />
           </div>
         </main>
 
