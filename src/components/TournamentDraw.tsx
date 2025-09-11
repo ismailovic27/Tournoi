@@ -79,7 +79,7 @@ function PotCard({ title, teams, potNumber }: { title: string; teams: string[]; 
   ];
 
   return (
-    <Card className="rounded-lg shadow-lg bg-white/50 backdrop-blur-md flex flex-col h-auto max-h-[350px] pt-2 pb-1">
+    <Card className="rounded-lg shadow-lg bg-white/50 backdrop-blur-md flex flex-col h-auto max-h-[350px] ">
       <CardHeader className={`p-2 border-b text-white rounded-t-lg ${potColors[potNumber - 1]}`}>
         <CardTitle className="text-sm md:text-base font-bold text-center">
           {title}
