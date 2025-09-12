@@ -2,13 +2,12 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shuffle, RotateCcw } from "lucide-react";
-import Image from "next/image";
+import { Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const pot1 = [
-  "أصدقاء أمين عبدلي", " آفاق جنين بورزق", "قلعة الشيخ بوعمامة", "نجم صفيصيفة",
+  "فريق مغرار", " آفاق جنين بورزق", "قلعة الشيخ بوعمامة", "نجم صفيصيفة",
   "شباب بلحنجير", "الشبيبة", "مولودية البيّض", "شبيبة بني ونيف",
 ];
 
@@ -44,24 +43,78 @@ function TeamPill({ name }: { name: string }) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="px-2 py-1 rounded-md text-xs md:text-sm font-semibold text-center bg-white text-black shadow border-2 border-gray-300 min-w-0 w-full"
+      style={{
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontWeight: '600',
+        textAlign: 'center',
+        backgroundColor: 'white',
+        color: 'black',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+        border: '2px solid #d1d5db',
+        minWidth: '0',
+        width: '100%',
+        '@media (min-width: 768px)': {
+          fontSize: '14px'
+        }
+      }}
     >
-      <div className="truncate">{name}</div>
+      <div style={{ 
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+      }}>{name}</div>
     </motion.div>
   );
 }
 
 function GroupCard({ title, teams }: { title: string; teams: string[] }) {
   return (
-    <Card className="rounded-lg shadow-lg bg-white/10 backdrop-blur-md flex flex-col h-[180px]">
-      <CardHeader className="p-2 border-b bg-blue-500/80 text-white rounded-t-lg">
-        <CardTitle className="text-xs md:text-sm font-bold text-center">
+    <Card style={{
+      borderRadius: '8px',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(12px)',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '180px'
+    }}>
+      <CardHeader style={{
+        padding: '8px',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+        color: 'white',
+        borderTopLeftRadius: '8px',
+        borderTopRightRadius: '8px'
+      }}>
+        <CardTitle style={{
+          fontSize: '12px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          '@media (min-width: 768px)': {
+            fontSize: '14px'
+          }
+        }}>
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2 items-stretch justify-start px-2 pt-3 pb-1 flex-1">
+      <CardContent style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+        padding: '12px 8px 4px 8px',
+        flex: '1'
+      }}>
         {teams.length === 0 && (
-          <div className="text-xs text-gray-400 text-center py-2">— في انتظار —</div>
+          <div style={{
+            fontSize: '12px',
+            color: '#9ca3af',
+            textAlign: 'center',
+            padding: '8px 0'
+          }}>— في انتظار —</div>
         )}
         {teams.map((t, i) => (
           <TeamPill key={t + i} name={t} />
@@ -73,25 +126,71 @@ function GroupCard({ title, teams }: { title: string; teams: string[] }) {
 
 function PotCard({ title, teams, potNumber }: { title: string; teams: string[]; potNumber: number }) {
   const potColors = [
-    "bg-blue-500",
-    "bg-blue-500",
-    "bg-blue-500"
+    "#3b82f6",
+    "#3b82f6",
+    "#3b82f6"
   ];
 
   return (
-    <Card className="rounded-lg shadow-lg bg-white/50 backdrop-blur-md flex flex-col h-auto">
-      <CardHeader className={`p-3 border-b text-white rounded-t-lg ${potColors[potNumber - 1]}`}>
-        <CardTitle className="text-base md:text-lg font-bold text-center">
+    <Card style={{
+      borderRadius: '8px',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      backdropFilter: 'blur(12px)',
+      display: 'flex',
+      flexDirection: 'column',
+      height: 'auto'
+    }}>
+      <CardHeader style={{
+        padding: '12px',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+        color: 'white',
+        borderTopLeftRadius: '8px',
+        borderTopRightRadius: '8px',
+        backgroundColor: potColors[potNumber - 1]
+      }}>
+        <CardTitle style={{
+          fontSize: '16px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          '@media (min-width: 768px)': {
+            fontSize: '18px'
+          }
+        }}>
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2 items-stretch justify-start px-3 pt-3 pb-1 flex-1">
+      <CardContent style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+        padding: '12px 12px 4px 12px',
+        flex: '1'
+      }}>
         {teams.map((team, i) => (
           <div
             key={team + i}
-            className="px-3 py-2 rounded-md text-sm font-semibold text-center bg-white text-black shadow border border-gray-300 min-w-0 w-full"
+            style={{
+              padding: '8px 12px',
+              borderRadius: '6px',
+              fontSize: '14px',
+              fontWeight: '600',
+              textAlign: 'center',
+              backgroundColor: 'white',
+              color: 'black',
+              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+              border: '1px solid #d1d5db',
+              minWidth: '0',
+              width: '100%'
+            }}
           >
-            <div className="truncate">{team}</div>
+            <div style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>{team}</div>
           </div>
         ))}
       </CardContent>
@@ -105,29 +204,40 @@ function ClassificationScreen({ onStartDraw }: { onStartDraw: () => void }) {
       {/* الخلفية */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/1.jpg')" }}
+        style={{ backgroundImage: "url('/bg.jpg')" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-green-600/30 via-red-400/30 to-[#C2B280]/40" />
+      <div className="absolute inset-0 " />
 
       {/* المحتوى */}
       <div className="relative z-10 flex flex-col h-full">
         {/* الهيدر */}
-        <header className="py-5 shrink-0 flex items-center gap-4 justify-start pl-6 pr-4">
-          <Image
-            src="/3.jpg"
-            alt="شعار الدورة"
-            width={72}
-            height={72}
-            className="w-16 h-16 rounded-full shadow-md"
-            priority
-          />
-          <h1 className="text-2xl md:text-3xl font-extrabold drop-shadow-lg text-green-600">
-            تصنيف الفرق المشاركة في دورة أبطال أمة الأقصى
-          </h1>
-        </header>
+        <header
+  style={{
+    paddingTop: "1.25rem",   // py-5
+    paddingBottom: "1.25rem",
+    flexShrink: 0,           // shrink-0
+    display: "flex",         // flex
+    alignItems: "center",    // items-center
+    gap: "1rem",             // gap-4
+    justifyContent: "flex-start", // justify-start
+    paddingLeft: "1.5rem",   // pl-6
+    paddingRight: "1rem",    // pr-4
+  }}
+>
+</header>
 
         {/* تصنيف الفرق */}
-        <main className="flex justify-center items-center flex-1  pr-24 py-4 overflow-y-auto">
+<main style={{
+    display: "flex",              // flex
+    justifyContent: "center",     // justify-center
+    alignItems: "center",         // items-center
+    flex: 1,                      // flex-1
+    paddingRight: "6rem",         // pr-24
+    paddingTop: "1rem",           // py-4 (top)
+    paddingBottom: "1rem",        // py-4 (bottom)
+    overflowY: "auto",            // overflow-y-auto
+  }}
+>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-7xl">
             <PotCard title="الجزائر المنتصرة" teams={pot1} potNumber={1} />
             <PotCard title="عين الصفراء أمانة و وفاء" teams={pot2} potNumber={2} />
@@ -136,15 +246,30 @@ function ClassificationScreen({ onStartDraw }: { onStartDraw: () => void }) {
         </main>
 
         {/* زر بدء القرعة */}
-        <div className="flex justify-center items-center py-4">
-          <Button
-            onClick={onStartDraw}
-            className="bg-green-500 text-white text-lg font-bold hover:bg-green-600 px-6 py-2"
-          >
-            <Shuffle className="w-5 h-5 ml-2" />
-            ابدأ القرعة
-          </Button>
-        </div>
+        <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "1rem", // py-4 px-4
+  }}
+>
+  <Button
+    onClick={onStartDraw}
+    style={{
+      backgroundColor: "#d4a373", // green-500
+      color: "white",
+      fontSize: "1.125rem", // text-lg
+      fontWeight: "bold",
+      padding: "0.5rem 1.5rem", // px-6 py-2
+      borderRadius: "30px",
+      cursor: "pointer",
+    }}
+  >
+    <Shuffle style={{ width: "20px", height: "20px", marginLeft: "0.5rem" }} />
+    ابدأ القرعة
+  </Button>
+</div>
       </div>
     </div>
   );
@@ -156,6 +281,72 @@ export default function TournamentDraw() {
   const [step, setStep] = useState(0); // 0 = pot1, 1 = pot2, 2 = pot3
   const [index, setIndex] = useState(0);
   const [showClassification, setShowClassification] = useState(true); // New state for initial screen
+  const [tournamentId, setTournamentId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  // Create tournament and save draw to database
+  async function saveTournamentToDatabase(finalGroups: string[][]) {
+    try {
+      setSaving(true);
+      
+      // Create tournament
+      const tournamentResponse = await fetch('/api/tournaments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'دورة أبطال أمة الأقصى',
+          description: 'البطولة المحلية للكرة'
+        })
+      });
+      
+      if (!tournamentResponse.ok) {
+        throw new Error('فشل في إنشاء البطولة');
+      }
+      
+      const tournament = await tournamentResponse.json();
+      setTournamentId(tournament.id);
+      
+      // Prepare teams data with pot information
+      const teamsData: unknown[] = [];
+      const groupsData = groupLabels.map(label => ({ name: label }));
+      
+      finalGroups.forEach((group, groupIndex) => {
+        group.forEach((teamName) => {
+          // Determine which pot this team came from
+          let pot = 1;
+          if (pot2.includes(teamName)) pot = 2;
+          else if (pot3.includes(teamName)) pot = 3;
+          
+          teamsData.push({
+            name: teamName,
+            pot: pot,
+            groupIndex: groupIndex
+          });
+        });
+      });
+      
+      // Save draw completion
+      const drawResponse = await fetch(`/api/tournaments/${tournament.id}/complete-draw`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          teams: teamsData,
+          groups: groupsData
+        })
+      });
+      
+      if (!drawResponse.ok) {
+        throw new Error('فشل في حفظ القرعة');
+      }
+      
+      console.log('تم حفظ القرعة بنجاح في قاعدة البيانات');
+    } catch (error) {
+      console.error('خطأ في حفظ القرعة:', error);
+      // Don't show error to user, just log it
+    } finally {
+      setSaving(false);
+    }
+  }
 
   function startDraw() {
     setGroups(Array.from({ length: 8 }, () => []));
@@ -186,6 +377,11 @@ export default function TournamentDraw() {
       if (index + 1 >= 8) {
         setStep(step + 1);
         setIndex(0);
+        
+        // If this was the last step, save to database
+        if (step + 1 >= 3) {
+          saveTournamentToDatabase(newGroups);
+        }
       }
     }, 1500);
   }
@@ -197,6 +393,7 @@ export default function TournamentDraw() {
     setStep(0);
     setIndex(0);
     setShowClassification(true); // Return to classification screen
+    setTournamentId(null);
   }
 
   // Show classification screen first
@@ -206,55 +403,118 @@ export default function TournamentDraw() {
 
   // Show tournament draw screen
   return (
-    <div dir="rtl" className="h-screen w-screen relative overflow-hidden text-white flex flex-col">
-      {/* الخلفية */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/1.jpg')" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-green-600/30 via-red-400/30 to-[#C2B280]/40" />
+    <div
+  dir="rtl"
+  style={{
+    height: "100vh",            // h-screen
+    width: "100vw",             // w-screen
+    position: "relative",       // relative
+    overflow: "hidden",         // overflow-hidden
+    color: "white",             // text-white
+    display: "flex",            // flex
+    flexDirection: "column",    // flex-col
+  }}
+>
+  {/* الخلفية */}
+  <div
+    style={{
+      position: "absolute",     // absolute
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,                  // inset-0
+      backgroundSize: "cover",  // bg-cover
+      backgroundPosition: "center", // bg-center
+      backgroundImage: "url('/bg2.jpg')",
+    }}
+  />
+  <div
+    style={{
+      position: "absolute",
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,                  // absolute inset-0
+    }}
+  />
 
-      {/* المحتوى */}
-      <div className="relative z-10 flex flex-col h-full">
+  {/* المحتوى */}
+  <div
+    style={{
+      position: "relative",     // relative
+      zIndex: 10,               // z-10
+      display: "flex",          // flex
+      flexDirection: "column",  // flex-col
+      height: "100%",           // h-full
+    }}
+  >
         {/* الهيدر */}
-        <header className="py-5 shrink-0 flex items-center gap-4 justify-start pl-6 pr-4">
-          <Image
-            src="/3.jpg"
-            alt="شعار الدورة"
-            width={56}
-            height={56}
-            className="w-16 h-16 rounded-full shadow-md"
-            priority
-          />
-          <h1 className="text-2xl md:text-3xl font-extrabold drop-shadow-lg text-green-600">
-            قرعة دورة أبطال أمة الأقصى
-          </h1>
-        </header>
+        <header
+  style={{
+    paddingTop: "1.25rem",     // py-5
+    paddingBottom: "3rem",
+    flexShrink: 0,             // shrink-0
+    display: "flex",           // flex
+    alignItems: "center",      // items-center
+    gap: "1rem",               // gap-4
+    justifyContent: "flex-start", // justify-start
+    paddingLeft: "1.5rem",     // pl-6
+    paddingRight: "1rem",      // pr-4
+  }}
+>
+</header>
 
-        {/* الفريق الحالي */}
-        <div className="flex justify-center items-center h-16">
-          <AnimatePresence>
-            {currentTeam && (
-              <motion.div
-                key={currentTeam}
-                initial={{ y: -30, opacity: 0, scale: 1.5 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                exit={{ y: 30, opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.4 }}
-                className="text-center text-lg md:text-4xl font-bold text-red-500 drop-shadow-lg"
-              >
-                {currentTeam}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+{/* الفريق الحالي */}
+<div
+  style={{
+    display: "flex",           // flex
+    justifyContent: "center",  // justify-center
+    alignItems: "center",      // items-center
+    height: "4rem",            // h-16
+  }}
+>
+  <AnimatePresence>
+    {currentTeam && (
+      <motion.div
+        key={currentTeam}
+        initial={{ y: -30, opacity: 0, scale: 1.5 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: 30, opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.4 }}
+        style={{
+          textAlign: "center",    // text-center
+          fontSize: "3rem",   // text-lg
+          fontWeight: "bold",     // font-bold
+          color: "#ef4444",       // text-red-500
+          textShadow: "0 2px 6px rgba(0,0,0,0.4)", // drop-shadow-lg
+        }}
+      >
+        {currentTeam}
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
 
-        {/* مجموعات */}
-<main className="grid grid-cols-2 md:grid-cols-4 gap-2 pl-1 pr-12 py-2 flex-1 overflow-y-auto h-[400px]">
+{/* مجموعات */}
+<main
+  style={{
+    display: "grid",                   // grid
+    gridTemplateColumns: "repeat(4, 1fr)", // grid-cols-2
+                          // gap-2
+    paddingLeft: "0.25rem",             // pl-1
+    paddingRight: "3rem",               // pr-12
+    paddingTop: "0.5rem",               // py-2 (top)
+    paddingBottom: "0.5rem",            // py-2 (bottom)
+    flex: 1,                            // flex-1
+    overflowY: "auto",                  // overflow-y-auto
+    height: "400px",                    // h-[400px]
+  }}
+>
   {groups.map((g, idx) => (
     <GroupCard key={idx} title={groupLabels[idx]} teams={g} />
   ))}
 </main>
+
 
         {/* أزرار التحكم */}
         <div className="flex gap-3 justify-center items-center py-2">
@@ -276,11 +536,19 @@ export default function TournamentDraw() {
               سحب فريق
             </Button>
           )}
-          <Button onClick={resetAll} className="bg-red-500 text-sm hover:bg-red-600">
-            <RotateCcw className="w-4 h-4 ml-1" />
-            إعادة ضبط
-          </Button>
+          
         </div>
+        
+        {/* رسالة إتمام القرعة */}
+        {step >= 3 && (
+          <div className="flex justify-center items-center py-4">
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-center">
+              <p className="font-bold">تمت القرعة بنجاح ⚽</p>
+              <p className="text-sm">سيتم نشر نتائج القرعة عبر صفحتنا على الفيسبوك</p>
+              {saving && <p className="text-sm mt-2">جاري الحفظ...</p>}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Tournament model
+model Tournament {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  status      TournamentStatus @default(DRAFT)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  teams       Team[]
+  groups      Group[]
+  matches     Match[]
+  
+  @@map("tournaments")
+}
+
+enum TournamentStatus {
+  DRAFT
+  DRAW_PHASE
+  GROUP_PHASE
+  KNOCKOUT_PHASE
+  COMPLETED
+}
+
+// Team model
+model Team {
+  id           String  @id @default(cuid())
+  name         String
+  pot          Int?    // 1, 2, or 3 for the three pots
+  tournamentId String
+  groupId      String?
+  
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  group        Group?     @relation(fields: [groupId], references: [id])
+  
+  homeMatches  Match[] @relation("HomeTeam")
+  awayMatches  Match[] @relation("AwayTeam")
+  
+  @@map("teams")
+}
+
+// Group model
+model Group {
+  id           String @id @default(cuid())
+  name         String // e.g., "المجموعة A"
+  tournamentId String
+  
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  teams        Team[]
+  matches      Match[]
+  
+  @@map("groups")
+}
+
+// Match model
+model Match {
+  id           String      @id @default(cuid())
+  tournamentId String
+  groupId      String?
+  homeTeamId   String
+  awayTeamId   String
+  homeScore    Int?
+  awayScore    Int?
+  status       MatchStatus @default(SCHEDULED)
+  matchday     Int?        // Which matchday/round this match belongs to
+  playedAt     DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  group        Group?     @relation(fields: [groupId], references: [id])
+  homeTeam     Team       @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team       @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  
+  @@map("matches")
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  COMPLETED
+  POSTPONED
+  CANCELLED
+}
