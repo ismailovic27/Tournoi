@@ -43,28 +43,9 @@ function TeamPill({ name }: { name: string }) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      style={{
-        padding: '4px 8px',
-        borderRadius: '6px',
-        fontSize: '12px',
-        fontWeight: '600',
-        textAlign: 'center',
-        backgroundColor: 'white',
-        color: 'black',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        border: '2px solid #d1d5db',
-        minWidth: '0',
-        width: '100%',
-        '@media (min-width: 768px)': {
-          fontSize: '14px'
-        }
-      }}
+      className="px-2 py-1 rounded-md text-xs md:text-sm font-semibold text-center bg-white text-black shadow-sm border-2 border-gray-300 min-w-0 w-full"
     >
-      <div style={{ 
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap'
-      }}>{name}</div>
+      <div className="overflow-hidden text-ellipsis whitespace-nowrap">{name}</div>
     </motion.div>
   );
 }
@@ -88,14 +69,7 @@ function GroupCard({ title, teams }: { title: string; teams: string[] }) {
         borderTopLeftRadius: '8px',
         borderTopRightRadius: '8px'
       }}>
-        <CardTitle style={{
-          fontSize: '12px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          '@media (min-width: 768px)': {
-            fontSize: '14px'
-          }
-        }}>
+        <CardTitle className="text-xs md:text-sm font-bold text-center">
           {title}
         </CardTitle>
       </CardHeader>
@@ -149,14 +123,7 @@ function PotCard({ title, teams, potNumber }: { title: string; teams: string[]; 
         borderTopRightRadius: '8px',
         backgroundColor: potColors[potNumber - 1]
       }}>
-        <CardTitle style={{
-          fontSize: '16px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          '@media (min-width: 768px)': {
-            fontSize: '18px'
-          }
-        }}>
+        <CardTitle className="text-base md:text-lg font-bold text-center">
           {title}
         </CardTitle>
       </CardHeader>
@@ -281,7 +248,6 @@ export default function TournamentDraw() {
   const [step, setStep] = useState(0); // 0 = pot1, 1 = pot2, 2 = pot3
   const [index, setIndex] = useState(0);
   const [showClassification, setShowClassification] = useState(true); // New state for initial screen
-  const [tournamentId, setTournamentId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   // Create tournament and save draw to database
@@ -304,7 +270,7 @@ export default function TournamentDraw() {
       }
       
       const tournament = await tournamentResponse.json();
-      setTournamentId(tournament.id);
+      console.log('Tournament created with ID:', tournament.id);
       
       // Prepare teams data with pot information
       const teamsData: unknown[] = [];
@@ -386,15 +352,7 @@ export default function TournamentDraw() {
     }, 1500);
   }
 
-  function resetAll() {
-    setGroups(Array.from({ length: 8 }, () => []));
-    setPots([]);
-    setCurrentTeam(null);
-    setStep(0);
-    setIndex(0);
-    setShowClassification(true); // Return to classification screen
-    setTournamentId(null);
-  }
+  // Remove unused resetAll function
 
   // Show classification screen first
   if (showClassification) {

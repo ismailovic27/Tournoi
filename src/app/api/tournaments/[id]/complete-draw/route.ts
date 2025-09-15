@@ -3,19 +3,20 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json()
     const { teams, groups } = body
     
     // Create groups
     const createdGroups = await Promise.all(
-      groups.map((group: any) =>
+      groups.map((group: { name: string }) =>
         prisma.group.create({
           data: {
             name: group.name,
-            tournamentId: params.id
+            tournamentId: id
           }
         })
       )
@@ -23,12 +24,12 @@ export async function POST(
     
     // Create teams and assign to groups
     await Promise.all(
-      teams.map((team: any, teamIndex: number) =>
+      teams.map((team: { name: string; pot: number; groupIndex: number }) =>
         prisma.team.create({
           data: {
             name: team.name,
             pot: team.pot,
-            tournamentId: params.id,
+            tournamentId: id,
             groupId: createdGroups[team.groupIndex]?.id
           }
         })
@@ -46,7 +47,7 @@ export async function POST(
         for (let j = i + 1; j < groupTeams.length; j++) {
           await prisma.match.create({
             data: {
-              tournamentId: params.id,
+              tournamentId: id,
               groupId: group.id,
               homeTeamId: groupTeams[i].id,
               awayTeamId: groupTeams[j].id,
@@ -60,7 +61,7 @@ export async function POST(
     
     // Update tournament status
     await prisma.tournament.update({
-      where: { id: params.id },
+      where: { id },
       data: { status: 'GROUP_PHASE' }
     })
     

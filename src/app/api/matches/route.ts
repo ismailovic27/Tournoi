@@ -17,6 +17,7 @@ export async function GET() {
     })
     return NextResponse.json(matches)
   } catch (error) {
+    console.error('Failed to fetch matches:', error);
     return NextResponse.json({ error: 'Failed to fetch matches' }, { status: 500 })
   }
 }
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json(match)
   } catch (error) {
+    console.error('Failed to create match:', error);
     return NextResponse.json({ error: 'Failed to create match' }, { status: 500 })
   }
 }

@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const group = await prisma.group.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         teams: true,
         matches: {
@@ -39,7 +40,7 @@ export async function GET(
     }> = {}
     
     // Initialize standings
-    group.teams.forEach(team => {
+    group.teams.forEach((team: { id: string; name: string }) => {
       standings[team.id] = {
         teamId: team.id,
         team: team.name,
@@ -55,7 +56,12 @@ export async function GET(
     })
     
     // Calculate from completed matches
-    group.matches.forEach(match => {
+    group.matches.forEach((match: {
+      homeTeamId: string;
+      awayTeamId: string;
+      homeScore: number | null;
+      awayScore: number | null;
+    }) => {
       if (match.homeScore !== null && match.awayScore !== null) {
         const homeTeamId = match.homeTeamId
         const awayTeamId = match.awayTeamId
@@ -100,6 +106,7 @@ export async function GET(
       standings: sortedStandings
     })
   } catch (error) {
+    console.error('Failed to fetch group standings:', error);
     return NextResponse.json({ error: 'Failed to fetch group standings' }, { status: 500 })
   }
 }

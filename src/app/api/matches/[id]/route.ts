@@ -3,14 +3,15 @@ import { prisma } from '@/lib/prisma'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json()
     const { homeScore, awayScore, status } = body
     
     const match = await prisma.match.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         homeScore,
         awayScore,
@@ -31,6 +32,7 @@ export async function PUT(
     
     return NextResponse.json(match)
   } catch (error) {
+    console.error('Failed to update match:', error);
     return NextResponse.json({ error: 'Failed to update match' }, { status: 500 })
   }
 }
@@ -63,7 +65,7 @@ async function updateGroupStandings(groupId: string) {
   
   // Initialize standings for all teams in the group
   const teams = await prisma.team.findMany({ where: { groupId } })
-  teams.forEach(team => {
+  teams.forEach((team: { id: string; name: string }) => {
     standings[team.id] = {
       team: team.name,
       played: 0,
@@ -78,7 +80,12 @@ async function updateGroupStandings(groupId: string) {
   })
   
   // Calculate standings from matches
-  matches.forEach(match => {
+  matches.forEach((match: {
+    homeTeamId: string;
+    awayTeamId: string;
+    homeScore: number | null;
+    awayScore: number | null;
+  }) => {
     if (match.homeScore !== null && match.awayScore !== null) {
       const homeTeamId = match.homeTeamId
       const awayTeamId = match.awayTeamId

@@ -1,4 +1,8 @@
-# Tournament Draw & Championship Management System
+# 🏆 Tournament Draw - دورة أبطال أمة الأقصى
+
+A modern tournament management system built with Next.js, featuring an interactive tournament draw interface with Arabic RTL support.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyour-username%2Ftournament-draw)
 
 This project consists of two applications sharing a common database:
 
